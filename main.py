@@ -6,6 +6,10 @@ import numpy as np
 
 # Preparing data
 data = pd.read_csv('Fish.csv')
+print('Fish dataset:\n')
+print(data.sample(10))
+print('\nPredict weight based on length1, length2, length3 and height:')
+print('weight = w0 + w1*length1 + w2*length2 + w3*length + w4*height\n')
 X = data.iloc[:, 2:].values
 y = data.iloc[:, 1].values
 
@@ -45,7 +49,7 @@ def GD_NAG(grad, w_init, eta=0.02, gamma=0.9, max_iter=400):
 
 w_init = np.random.random((Xbar.shape[1], 1))
 w = GD_NAG(grad, w_init, eta=0.0004, max_iter=int(1e6))
-print("Weights solved using gradient descent:\nw = {}".format(w.reshape((w.shape[0],))))
+print("Solution using gradient descent:\nw = {}".format(w.reshape((w.shape[0],))))
 
 pred = Xbar_test.dot(w)
 print("Accuracy score: {} %\n".format(100 * r2_score(y_test, pred)))
@@ -53,11 +57,11 @@ print("Accuracy score: {} %\n".format(100 * r2_score(y_test, pred)))
 # Solution using normal equation
 w = np.dot(np.linalg.pinv(np.dot(Xbar.T, Xbar)), np.dot(Xbar.T, y_train))
 pred = np.dot(Xbar_test, w)
-print("Weights solved using normal equation:\nw = {}".format(w))
+print("Solution using normal equation:\nw = {}".format(w))
 print("Accuracy score: {} %\n".format(100 * r2_score(y_test, pred)))
 
 # Solution using scikit-learn
 regr = LinearRegression()
 regr.fit(X_train, y_train)
-print("Weights solved by scikit-learn:\nw = {}".format(np.concatenate((np.array([regr.intercept_]), regr.coef_))))
+print("Solution using scikit-learn:\nw = {}".format(np.concatenate((np.array([regr.intercept_]), regr.coef_))))
 print("Accuracy score: {} %\n".format(100 * regr.score(X_test, y_test)))
